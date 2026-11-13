@@ -26,9 +26,34 @@ def password_generator(length: int = 8) -> str:
 # chars_incl= characters that must be in password
 # i= how many letters or characters the password length will be
 def alternative_password_generator(chars_incl: str, i: int) -> str:
+    """
+    Generate a password of length i that contains every character of chars_incl.
+
+    >>> len(alternative_password_generator("abc", 10))
+    10
+    >>> len(alternative_password_generator("abc", 3))
+    3
+    >>> len(alternative_password_generator("", 7))
+    7
+    >>> all(char in alternative_password_generator("Aa1!", 12) for char in "Aa1!")
+    True
+    >>> alternative_password_generator("abcdefgh", 5)
+    Traceback (most recent call last):
+        ...
+    ValueError: Password length 5 is less than the 8 required characters
+    >>> alternative_password_generator("abcd", 3)
+    Traceback (most recent call last):
+        ...
+    ValueError: Password length 3 is less than the 4 required characters
+    """
     # Password Generator = full boot with random_number, random_letters, and
     # random_character FUNCTIONS
-    # Put your code here...
+    if i < len(chars_incl):
+        msg = (
+            f"Password length {i} is less than the "
+            f"{len(chars_incl)} required characters"
+        )
+        raise ValueError(msg)
     i -= len(chars_incl)
     quotient = i // 3
     remainder = i % 3
@@ -86,10 +111,12 @@ def main() -> None:
         "Please indicate the characters that must be in your password: "
     ).strip()
     print("Password generated:", password_generator(length))
-    print(
-        "Alternative Password generated:",
-        alternative_password_generator(chars_incl, length),
-    )
+    try:
+        alternative_password = alternative_password_generator(chars_incl, length)
+    except ValueError as error:
+        print("Alternative Password could not be generated:", error)
+    else:
+        print("Alternative Password generated:", alternative_password)
     print("[If you are thinking of using this password, You better save it.]")
 
 
